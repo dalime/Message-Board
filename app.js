@@ -44,7 +44,11 @@ app.route('/messages')
 app.route('/messages/:id')
   .get((req, res) => {
     Message.getMessage(req.params.id, function(err, message) {
-      res.status(err ? 400 : 200).send(err);
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        res.send(message);
+      }
     })
   })
   .put((req, res) => {

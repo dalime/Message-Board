@@ -29,6 +29,7 @@ function renderList() {
         $tr.removeAttr('id');
         $tr.find('.msgTitle').text(message.title);
         $tr.find('.msgText').text(message.text);
+        $tr.find('.msgTime').text(message.time);
         $tr.find('.msgAuthor').text(message.author);
         $tr.data('id', message.id);
         return $tr;
@@ -41,9 +42,10 @@ function addMessage() {
 
   let $newTitle = $('#createTitle').val();
   let $newText = $('#createText').val();
+  let $newTime = $('#createTime').val();
   let $newAuthor = $('#createAuthor').val();
 
-  let newObj = {title: $newTitle, text: $newText, author: $newAuthor};
+  let newObj = {title: $newTitle, text: $newText, time: $newTime, author: $newAuthor};
 
   $.post('/messages', newObj)
   .done(givenID => {
@@ -61,12 +63,9 @@ function openEditMessageModal() {
   $messageEditId = $(this).closest('tr').data('id');
   $.get(`/messages/${$messageEditId}`)
   .done(message => {
-    console.log($messageEditId);
-    console.log(message.title);
-    console.log(message.text);
-    console.log(message.author);
     $('#messageEditModal').find('#editTitle').val(message.title);
     $('#messageEditModal').find('#editText').val(message.text);
+    $('#messageEditModal').find('#editTime').val(message.time);
     $('#messageEditModal').find('#editAuthor').val(message.author);
     $('#messageEditModal').modal();
   })
@@ -76,8 +75,9 @@ function editMessage() {
   console.log('messageID: ', $messageEditId);
   let $updateTitle = $('#messageEditModal').find('#editTitle').val();
   let $updateText = $('#messageEditModal').find('#editText').val();
+  let $updateTime = $('#messageEditModal').find('#editTime').val();
   let $updateAuthor = $('#messageEditModal').find('#editAuthor').val();
-  let updateMessage = {title: $updateTitle, text: $updateText, author: $updateAuthor, id: $messageEditId};
+  let updateMessage = {title: $updateTitle, text: $updateText, time: $updateTime, author: $updateAuthor, id: $messageEditId};
   $.ajax(`/messages/${$messageEditId}`, {
     method: 'PUT',
     data: updateMessage,

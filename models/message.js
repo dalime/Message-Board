@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const dataFilePath = path.join(__dirname, '../data/messages.json');
 const uuid = require('uuid');
+const moment = require('moment');
 
 exports.getAll = function(cb) {
   fs.readFile(dataFilePath, (err, buffer) => {
@@ -21,6 +22,7 @@ exports.create = function(messageObject, cb) {
     if (err) return cb(err);
 
     messageObject.id = uuid.v4();
+    messageObject.time = moment().format("MMM Do YY");
 
     messages.push(messageObject);
     fs.writeFile(dataFilePath, JSON.stringify(messages), function(err) {
@@ -32,7 +34,11 @@ exports.create = function(messageObject, cb) {
 exports.getMessage = function(messageID, cb) {
   exports.getAll(function(err, messages) {
     if (err) return cb(err);
-    let message = messages.filter(message => message.id === messageID)[0];
+    let index = messages.map(function(obj) {
+      return obj.id;
+    }).indexOf(messageID);
+    let message = messages[index];
+    console.log(message);
     cb(null, message);
   });
 }

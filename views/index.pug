@@ -23,6 +23,7 @@ body
             tr
               th Title
               th Message
+              th Time
               th Author
               th Edit
               th Delete
@@ -31,6 +32,7 @@ body
               tr(data-id= message.id)
                 td= message.title
                 td= message.text
+                td= message.time
                 td= message.author
                 td
                   button.btn.btn-default.btn-xs.edit Edit
@@ -89,6 +91,7 @@ body
       tr#template
         td.msgTitle
         td.msgText
+        td.msgTime
         td.msgAuthor
         td
           button.btn.btn-default.btn-xs.edit !
