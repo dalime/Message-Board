@@ -42,10 +42,13 @@ function addMessage() {
 
   let $newTitle = $('#createTitle').val();
   let $newText = $('#createText').val();
-  let $newTime = $('#createTime').val();
   let $newAuthor = $('#createAuthor').val();
 
-  let newObj = {title: $newTitle, text: $newText, time: $newTime, author: $newAuthor};
+  $('#createTitle').val('');
+  $('#createText').val('');
+  $('#createAuthor').val('');
+
+  let newObj = {title: $newTitle, text: $newText, time: '', author: $newAuthor};
 
   $.post('/messages', newObj)
   .done(givenID => {
@@ -58,7 +61,7 @@ function addMessage() {
 }
 
 let $messageEditId;
-
+let $messageEditTime;
 function openEditMessageModal() {
   $messageEditId = $(this).closest('tr').data('id');
   $.get(`/messages/${$messageEditId}`)
@@ -66,6 +69,7 @@ function openEditMessageModal() {
     $('#messageEditModal').find('#editTitle').val(message.title);
     $('#messageEditModal').find('#editText').val(message.text);
     $('#messageEditModal').find('#editTime').val(message.time);
+    $messageEditTime = message.time;
     $('#messageEditModal').find('#editAuthor').val(message.author);
     $('#messageEditModal').modal();
   })
@@ -75,9 +79,8 @@ function editMessage() {
   console.log('messageID: ', $messageEditId);
   let $updateTitle = $('#messageEditModal').find('#editTitle').val();
   let $updateText = $('#messageEditModal').find('#editText').val();
-  let $updateTime = $('#messageEditModal').find('#editTime').val();
   let $updateAuthor = $('#messageEditModal').find('#editAuthor').val();
-  let updateMessage = {title: $updateTitle, text: $updateText, time: $updateTime, author: $updateAuthor, id: $messageEditId};
+  let updateMessage = {title: $updateTitle, text: $updateText, time: $messageEditTime, author: $updateAuthor, id: $messageEditId};
   $.ajax(`/messages/${$messageEditId}`, {
     method: 'PUT',
     data: updateMessage,
@@ -94,4 +97,8 @@ function editMessage() {
 
 function openCreateMessageModal() {
   $('#messageCreateModal').modal();
+  $('#messageEditModal').find('#editTitle').val('');
+  $('#messageEditModal').find('#editText').val('');
+  $('#messageEditModal').find('#editTime').val('');
+  $('#messageEditModal').find('#editAuthor').val('');
 }
